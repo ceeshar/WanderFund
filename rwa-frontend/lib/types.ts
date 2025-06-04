@@ -265,4 +265,34 @@ export interface FinancialsFormData {
   managementFee: string;
   distributionFrequency: 'monthly' | 'quarterly' | 'annually';
   estimatedAppreciation: string;
-} 
+}
+
+export interface TourismAsset {
+  id: string;
+  name: string;
+  symbol: string;
+  asset_type: 'boutique_hotel' | 'eco_resort' | 'camping_site' | 'local_experience';
+  creator_info: {
+    name: string;
+    location: string;
+    experience_years: number;
+    certifications: string[];
+  };
+  asset_details: {
+    capacity: number;
+    amenities: string[];
+    sustainability_score: number;
+    eco_certified: boolean;
+  };
+  timeline_info: {
+    creation_date: string;
+    milestone_date: string;
+    estimated_completion: string;
+  };
+  financial: {
+    funding_goal: number;
+    current_funding: number;
+    token_price: number;
+    total_supply: number;
+  };
+}

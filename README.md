@@ -1,8 +1,8 @@
-# 🏢 RWA Investment Platform
+# 🌟 TravelToken Experiences Hub
 
-A professional Real World Asset (RWA) tokenization and investment platform built on the Stellar blockchain. This platform enables investors to discover, invest in, and trade tokenized real world assets including real estate, commodities, and infrastructure projects.
+A specialized tourism & hospitality tokenization platform built on the Stellar blockchain. This platform enables the tokenization and investment in boutique hotels, eco-tourism facilities, and unique travel experiences.
 
-![RWA Platform](https://img.shields.io/badge/Platform-RWA_Investment-blue)
+![Platform](https://img.shields.io/badge/Platform-TravelToken_Experiences-blue)
 ![Blockchain](https://img.shields.io/badge/Blockchain-Stellar-brightgreen)
 ![Framework](https://img.shields.io/badge/Framework-Next.js_15-black)
 ![TypeScript](https://img.shields.io/badge/Language-TypeScript-blue)
@@ -10,28 +10,27 @@ A professional Real World Asset (RWA) tokenization and investment platform built
 
 ## 🎯 **Project Overview**
 
-The RWA Investment Platform democratizes access to traditionally illiquid real world assets by tokenizing them on the Stellar blockchain. Investors can purchase fractional ownership of high-value assets like premium real estate, precious metals storage facilities, and renewable energy infrastructure.
+TravelToken Experiences Hub revolutionizes tourism investment by tokenizing unique travel assets on the Stellar blockchain. The platform connects eco-conscious investors with sustainable tourism opportunities, enabling fractional ownership in boutique hotels, eco-lodges, and curated travel experiences.
 
 ### **🌟 Key Features**
 
-#### **For Investors**
-- 💼 **Professional Dashboard** - Portfolio overview with real-time asset valuations
-- 🏪 **Asset Marketplace** - Discover and filter tokenized investment opportunities
-- 💸 **Secure Transfers** - Send/receive RWA tokens with compliance validation
-- 📊 **Performance Tracking** - Monitor yields, compliance status, and asset performance
-- 🔐 **Wallet Integration** - Seamless Freighter wallet connectivity
+#### **For Tourism Business Owners**
+- 🏨 **Property Tokenization** - Simplified process for tourism asset tokenization
+- 💰 **Funding Access** - Early stage funding from global investors
+- 📊 **Performance Tracking** - Monitor bookings and revenue metrics
+- 🌿 **Sustainability Score** - Showcase eco-friendly initiatives
 
-#### **For Asset Owners**
-- 🏭 **Tokenization Wizard** - 5-step process to tokenize physical assets
-- 📋 **Compliance Management** - KYC/AML and regulatory compliance tools
-- 📈 **Funding Management** - Set investment goals and track capital raising
-- 🔒 **Legal Framework** - Document verification and legal compliance
+#### **For Investors**
+- 💼 **Experience Portfolio** - Invest in unique travel experiences
+- 🎯 **Curated Opportunities** - Premium tourism investment listings
+- 🏆 **Exclusive Benefits** - Priority booking rights and special perks
+- 📈 **Value Tracking** - Monitor investment performance
 
 #### **Platform Features**
-- 🌐 **Multi-Asset Support** - Real estate, commodities, infrastructure
-- ⚡ **Stellar Integration** - Fast, low-cost blockchain transactions
-- 🛡️ **Regulatory Compliance** - Built-in KYC/whitelist validation
-- 📱 **Responsive Design** - Professional UI optimized for all devices
+- 🌍 **Eco-Tourism Focus** - Emphasis on sustainable tourism projects
+- ⚡ **Stellar Integration** - Efficient blockchain transactions
+- 🛡️ **Compliance Tools** - Tourism license validation
+- 📱 **Modern Interface** - Beautiful, responsive design
 
 ---
 
@@ -79,12 +78,12 @@ npm start
 
 | Component | Technology | Purpose |
 |-----------|------------|---------|
-| **Frontend** | Next.js 15 + TypeScript | React-based web application |
-| **Styling** | Tailwind CSS + shadcn/ui | Professional UI components |
-| **State Management** | Zustand | Lightweight state management |
-| **Blockchain** | Stellar SDK | Blockchain integration |
-| **Wallet** | Freighter API | Wallet connectivity |
-| **Icons** | Lucide React | Professional icon system |
+| **Frontend** | Next.js 15 + TypeScript | Modern web application |
+| **Styling** | Tailwind CSS + shadcn/ui | Beautiful UI components |
+| **State Management** | Zustand | Efficient state handling |
+| **Blockchain** | Stellar SDK | Token management |
+| **Wallet** | Freighter API | Secure transactions |
+| **Theme** | Custom Tourism Design | Travel-focused UI |
 
 ### **Directory Structure**
 
@@ -117,22 +116,22 @@ rwa-frontend/
 ## 💼 **Smart Contract Integration**
 
 ### **Contract Details**
-- **Contract ID**: `CBQAAC4EHNMMHEI2W3QU6UQ5N4KSVYRLVTB5M2XMARCNS4CNLWMX3VQ6`
 - **Network**: Stellar Testnet
-- **Asset**: Luxury Apartment NYC (LAPT)
-- **Type**: Premium Manhattan real estate token
+- **Asset Types**: 
+  - Boutique Hotel Tokens (BHT)
+  - Eco-Lodge Tokens (ELT)
+  - Experience Tokens (EXT)
 
 ### **Supported Operations**
 
 | Operation | Description | Status |
 |-----------|-------------|--------|
-| `get_balance` | Query user's token balance | ✅ Implemented |
-| `get_metadata` | Retrieve asset information | ✅ Implemented |
-| `transfer` | Send tokens between addresses | ✅ Implemented |
-| `check_compliance` | Verify KYC/whitelist status | ✅ Implemented |
-| `get_supply` | Get total token supply | ✅ Implemented |
-| `mint` | Create new tokens (admin) | 🔄 Admin only |
-| `pause` | Pause contract operations | 🔄 Admin only |
+| `get_balance` | Check token holdings | ✅ Implemented |
+| `get_property_details` | View tourism asset info | ✅ Implemented |
+| `transfer` | Transfer ownership rights | ✅ Implemented |
+| `verify_license` | Check tourism licenses | ✅ Implemented |
+| `book_stay` | Redeem accommodation | 🔄 In Progress |
+| `list_experiences` | View available experiences | 🔄 In Progress |
 
 ### **Asset Metadata Structure**
 
@@ -150,164 +149,35 @@ interface AssetMetadata {
 
 ---
 
-## 🎨 **User Interface Guide**
+## 🎨 **Design System**
 
-### **🏠 Dashboard Page (`/`)**
-- Portfolio value and performance metrics
-- Compliance status indicators
-- Quick action buttons
-- Investment opportunities overview
-
-### **🏪 Marketplace Page (`/marketplace`)**
-- Asset discovery with search and filtering
-- Investment statistics and analytics
-- Asset cards with key metrics
-- Direct investment flow
-
-### **🏭 Tokenization Page (`/tokenize`)**
-- 5-step asset tokenization wizard
-- Document upload and verification
-- Token economics configuration
-- Compliance settings and deployment
-
-### **💸 Transfer Page (`/transfer`)**
-- Secure token transfer interface
-- Address validation and compliance checking
-- Transaction preview and confirmation
-- Real-time balance updates
-
----
-
-## 🔐 **Security & Compliance**
-
-### **Wallet Security**
-- Non-custodial wallet integration
-- Private key remains with user
-- Session management and auto-disconnect
-- Network validation and switching
-
-### **Transaction Safety**
-- Multi-step validation process
-- Compliance verification before transfers
-- Clear transaction previews
-- Comprehensive error handling
-
-### **Regulatory Compliance**
-- KYC verification requirements
-- Jurisdiction-based restrictions
-- Accredited investor validation
-- Audit trail maintenance
-
----
-
-## 🌟 **Current Features**
-
-### **✅ Phase 1: Core Investment Platform (Completed)**
-- [x] Professional investor dashboard
-- [x] Asset marketplace with filtering
-- [x] Secure token transfer system
-- [x] Freighter wallet integration
-- [x] Smart contract mock client
-- [x] Responsive UI/UX design
-- [x] TypeScript type safety
-- [x] Compliance tracking
-
-### **🔄 Phase 2: Enhanced Trading (In Development)**
-- [ ] Advanced marketplace features
-- [ ] Investment calculator and ROI projections
-- [ ] Order book and trading interface
-- [ ] Price charts and market data
-- [ ] Portfolio analytics
-
-### **📋 Phase 3: Tokenization Engine (Planned)**
-- [ ] Complete tokenization wizard
-- [ ] Document verification system
-- [ ] Legal compliance automation
-- [ ] Smart contract deployment
-- [ ] Asset management tools
-
-### **🔮 Phase 4: Advanced Features (Future)**
-- [ ] Admin panel with role-based access
-- [ ] Revenue distribution automation
-- [ ] Advanced analytics and reporting
-- [ ] Mobile application (React Native)
-- [ ] Multi-chain support
-
----
-
-## 🛠️ **Development**
-
-### **Environment Setup**
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server with hot reload
-npm run dev
-
-# Type checking
-npm run type-check
-
-# Linting
-npm run lint
-
-# Build production bundle
-npm run build
+### **Color Palette**
+```css
+Primary: #40E0D0    /* Turquoise - Ocean vibes */
+Secondary: #F5F5DC  /* Beige - Warm welcome */
+Accent: #D2691E     /* Earth - Premium feel */
+Background: #FFFFFF /* Clean spaces */
+Text: #2C3E50      /* Professional */
 ```
-
-### **Environment Variables**
-
-```env
-# Optional - defaults are provided
-NEXT_PUBLIC_STELLAR_NETWORK=testnet
-NEXT_PUBLIC_CONTRACT_ID=CBQAAC4EHNMMHEI2W3QU6UQ5N4KSVYRLVTB5M2XMARCNS4CNLWMX3VQ6
-```
-
-### **Configuration Files**
-
-| File | Purpose |
-|------|---------|
-| `next.config.ts` | Next.js configuration |
-| `tailwind.config.ts` | Tailwind CSS settings |
-| `tsconfig.json` | TypeScript configuration |
-| `components.json` | shadcn/ui component config |
-
----
-
-## 🧪 **Testing Strategy**
-
-### **Current Testing Approach**
-- **Mock Contract Client**: Simulates all blockchain interactions
-- **Test Data**: Realistic asset metadata and user balances
-- **Validation Testing**: Address format and compliance checking
-- **Error Simulation**: Network failures and edge cases
-
-### **Planned Testing Implementation**
-- [ ] Unit tests for utilities and components
-- [ ] Integration tests for wallet and contract flows
-- [ ] End-to-end tests for critical user journeys
-- [ ] Smart contract integration testing
-- [ ] Performance testing and optimization
 
 ---
 
 ## 📈 **Asset Types Supported**
 
-### **🏢 Real Estate**
+### **🏨 Boutique Hotels**
+- **Minimum Value**: $250,000
+- **Features**: Unique character, prime locations
+- **Example**: Mountain View Resort - $1.2M luxury eco-lodge
+
+### **🌿 Eco-Tourism Facilities**
 - **Minimum Value**: $100,000
-- **Examples**: Apartment buildings, office complexes, retail spaces
-- **Current**: Luxury Apartment NYC (LAPT) - $2.5M Manhattan property
+- **Features**: Sustainable operations, nature integration
+- **Example**: Rainforest Retreat - $800K eco-resort
 
-### **🏅 Commodities**
+### **🎯 Travel Experiences**
 - **Minimum Value**: $50,000
-- **Examples**: Gold storage, oil reserves, agricultural products
-- **Planned**: Gold Storage Facility (Delaware) - $3M precious metals facility
-
-### **⚡ Infrastructure**
-- **Minimum Value**: $500,000
-- **Examples**: Solar farms, data centers, transportation hubs
-- **Planned**: Renewable Energy Farm (Texas) - $8M solar project
+- **Features**: Curated tours, cultural immersion
+- **Example**: Safari Adventure Package - $150K annual operation
 
 ---
 
@@ -415,4 +285,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 [Website](link) • [Documentation](link) • [Discord](link) • [Twitter](link)
 
-</div> 
+</div>

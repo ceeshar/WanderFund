@@ -97,6 +97,27 @@ const marketplaceAssets = [
   }
 ];
 
+const filters = {
+  asset_type: [
+    { value: 'boutique_hotel', label: 'Boutique Hotels' },
+    { value: 'eco_resort', label: 'Eco Resorts' },
+    { value: 'camping_site', label: 'Camping Sites' },
+    { value: 'local_experience', label: 'Local Experiences' }
+  ],
+  location: [
+    { value: 'coastal', label: 'Coastal' },
+    { value: 'mountain', label: 'Mountain' },
+    { value: 'urban', label: 'Urban' },
+    { value: 'rural', label: 'Rural' }
+  ],
+  category: [
+    { value: 'luxury', label: 'Luxury' },
+    { value: 'adventure', label: 'Adventure' },
+    { value: 'cultural', label: 'Cultural' },
+    { value: 'wellness', label: 'Wellness' }
+  ]
+};
+
 export default function MarketplacePage() {
   const { isConnected } = useWalletStore();
   const [searchTerm, setSearchTerm] = useState('');
@@ -159,7 +180,7 @@ export default function MarketplacePage() {
         <div className="space-y-8">
           {/* Page Header */}
           <div className="space-y-4">
-            <h1 className="text-4xl font-bold">Asset Marketplace</h1>
+            <h1 className="text-4xl font-bold">Travel Marketplace</h1>
             <p className="text-xl text-muted-foreground">
               Discover tokenized real world assets and start investing today
             </p>
@@ -408,4 +429,4 @@ export default function MarketplacePage() {
       </main>
     </div>
   );
-} 
+}

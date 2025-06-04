@@ -343,4 +343,55 @@ export const batchWhitelistAddresses = async (
   }
 
   return { success, failed };
-}; 
+};
+
+export const SAMPLE_ASSETS = [
+  {
+    id: 'eco-resort-001',
+    name: 'Mediterranean Sunset Resort',
+    symbol: 'MSR',
+    asset_type: 'eco_resort',
+    creator_info: {
+      name: 'Aegean Hospitality Group',
+      location: 'Bodrum, Turkey',
+      experience_years: 15,
+      certifications: ['Eco-Certified', 'Sustainable Tourism']
+    },
+    asset_details: {
+      capacity: 20,
+      amenities: ['Ocean View', 'Organic Garden', 'Yoga Center'],
+      sustainability_score: 95,
+      eco_certified: true
+    },
+    financial: {
+      token_price: 100,
+      total_supply: 1000,
+      current_funding: 450,
+      funding_goal: 1000
+    }
+  },
+  {
+    id: 'boutique-001',
+    name: 'Ancient City Boutique Hotel',
+    symbol: 'ACBH',
+    asset_type: 'boutique_hotel',
+    creator_info: {
+      name: 'Heritage Hotels Group',
+      location: 'Istanbul, Turkey',
+      experience_years: 10,
+      certifications: ['Quality Service', 'Historical Property']
+    },
+    asset_details: {
+      capacity: 15,
+      amenities: ['Historical Building', 'Luxury Spa', 'Rooftop Restaurant'],
+      sustainability_score: 85,
+      eco_certified: false
+    },
+    financial: {
+      token_price: 150,
+      total_supply: 800,
+      current_funding: 200,
+      funding_goal: 800
+    }
+  }
+];

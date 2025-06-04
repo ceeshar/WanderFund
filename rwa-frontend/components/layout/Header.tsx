@@ -90,6 +90,13 @@ export function Header() {
     }
   };
 
+  const navigation = [
+    { name: 'Experience Dashboard', href: '/dashboard' },
+    { name: 'Travel Marketplace', href: '/marketplace' },
+    { name: 'List Your Property', href: '/tokenize' },
+    { name: 'Transfer Rights', href: '/transfer' },
+  ];
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
@@ -105,30 +112,15 @@ export function Header() {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-6">
-            <Link 
-              href="/dashboard" 
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              Dashboard
-            </Link>
-            <Link 
-              href="/marketplace" 
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              Marketplace
-            </Link>
-            <Link 
-              href="/tokenize" 
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              Tokenize
-            </Link>
-            <Link 
-              href="/transfer" 
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              Transfer
-            </Link>
+            {navigation.map((item) => (
+              <Link 
+                key={item.name} 
+                href={item.href} 
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
+                {item.name}
+              </Link>
+            ))}
           </nav>
         </div>
 
@@ -219,4 +211,4 @@ export function Header() {
       </div>
     </header>
   );
-} 
+}
