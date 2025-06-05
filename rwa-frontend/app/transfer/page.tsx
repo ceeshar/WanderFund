@@ -16,7 +16,10 @@ import {
   AlertCircle, 
   ArrowRight,
   Info,
-  Wallet
+  Wallet,
+  Hotel,
+  Users,
+  Globe
 } from 'lucide-react';
 import { formatTokenAmount, isValidStellarAddress, toContractAmount, estimateNetworkFee } from '@/lib/stellar';
 import { toast } from 'sonner';
@@ -134,212 +137,153 @@ export default function TransferPage() {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto space-y-6">
-          {/* Page Header */}
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold">Transfer RWA Tokens</h1>
-            <p className="text-muted-foreground">
-              Send your tokenized real world asset shares to other verified investors
+        <div className="max-w-2xl mx-auto space-y-8">
+          <div>
+            <h1 className="text-3xl font-bold">Transfer Travel Rights</h1>
+            <p className="text-lg text-muted-foreground">
+              Transfer your property tokens and associated stay benefits
             </p>
           </div>
 
-          {/* Compliance Status */}
-          <Alert>
-            <Info className="h-4 w-4" />
-            <AlertDescription>
-              <div className="flex items-center justify-between">
-                <span>
-                  Your compliance status: {' '}
-                  <Badge variant={isWhitelisted ? 'default' : 'destructive'}>
-                    {isWhitelisted ? 'Verified' : 'Not Verified'}
-                  </Badge>
-                </span>
-                {compliance?.kyc_verified && (
-                  <Badge variant="outline" className="text-xs">
-                    KYC Complete
-                  </Badge>
-                )}
-              </div>
-            </AlertDescription>
-          </Alert>
-
-          {/* Current Holdings */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Holdings</CardTitle>
-              <CardDescription>Available RWA tokens for transfer</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-2xl font-bold">{formatTokenAmount(userBalance)} LAPT</p>
-                  <p className="text-sm text-muted-foreground">Luxury Apartment NYC tokens</p>
-                </div>
-                <Badge variant="secondary">Real Estate</Badge>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Transfer Form */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Send className="h-5 w-5" />
-                Transfer Tokens
-              </CardTitle>
-              <CardDescription>
-                Enter the recipient address and amount to transfer
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Recipient Address */}
-              <div className="space-y-2">
-                <Label htmlFor="recipient">Recipient Address</Label>
-                <Input
-                  id="recipient"
-                  placeholder="G... (Stellar address)"
-                  value={recipient}
-                  onChange={(e) => setRecipient(e.target.value)}
-                  className={`font-mono ${
-                    recipient && !isValidRecipient ? 'border-red-500' : ''
-                  }`}
-                />
-                {recipient && !isValidRecipient && (
-                  <p className="text-sm text-red-600">Invalid Stellar address format</p>
-                )}
-                {isValidRecipient && recipientCompliance && (
-                  <div className="flex items-center gap-2 text-sm text-green-600">
-                    <CheckCircle className="h-4 w-4" />
-                    Recipient is verified and whitelisted
+          {!isConnected ? (
+            <Card>
+              <CardContent className="pt-6">
+                <div className="text-center space-y-4">
+                  <Globe className="h-12 w-12 mx-auto text-muted-foreground" />
+                  <div className="space-y-2">
+                    <h2 className="text-xl font-semibold">Connect Your Wallet</h2>
+                    <p className="text-sm text-muted-foreground">
+                      Please connect your wallet to manage your travel tokens
+                    </p>
                   </div>
-                )}
-              </div>
-
-              {/* Amount */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="amount">Amount (LAPT)</Label>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={handleMaxAmount}
-                    className="text-xs"
-                  >
-                    Max: {formatTokenAmount(userBalance)}
+                  <Button onClick={connect} disabled={isLoading}>
+                    <Wallet className="h-4 w-4 mr-2" />
+                    {isLoading ? 'Connecting...' : 'Connect Wallet'}
                   </Button>
                 </div>
-                <Input
-                  id="amount"
-                  type="number"
-                  placeholder="0.00"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  min="0"
-                  step="0.01"
-                />
-                {amount && parseFloat(amount) > parseFloat(formatTokenAmount(userBalance)) && (
-                  <p className="text-sm text-red-600">Insufficient balance</p>
-                )}
-              </div>
-
-              {/* Transaction Details */}
-              {amount && isValidRecipient && (
-                <div className="space-y-3 p-4 bg-muted rounded-lg">
-                  <h4 className="font-medium">Transaction Summary</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span>Amount:</span>
-                      <span className="font-mono">{amount} LAPT</span>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-6">
+              {/* Balance Card */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Your Travel Portfolio</CardTitle>
+                  <CardDescription>Current holdings and benefits</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Token Balance</p>
+                      <p className="text-2xl font-bold">
+                        {formatTokenAmount(userBalance)} TRVL
+                      </p>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Estimated Network Fee:</span>
-                      <span className="font-mono">{estimateNetworkFee('transfer')} XLM</span>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Stay Credits</p>
+                      <p className="text-2xl font-bold">
+                        {Math.floor(parseFloat(formatTokenAmount(userBalance)) / 1000) * 7} nights
+                      </p>
                     </div>
-                    <div className="flex justify-between">
-                      <span>To:</span>
-                      <span className="font-mono text-xs">
-                        {recipient.slice(0, 8)}...{recipient.slice(-8)}
-                      </span>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Status</p>
+                      <div className="flex items-center gap-2">
+                        {isWhitelisted ? (
+                          <Badge className="bg-[#40E0D0]">Verified Explorer</Badge>
+                        ) : (
+                          <Badge variant="secondary">Pending Verification</Badge>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                </CardContent>
+              </Card>
 
-              {/* Transfer Button */}
-              <Button 
-                onClick={handleTransfer}
-                disabled={!canTransfer() || isLoading}
-                className="w-full"
-                size="lg"
-              >
-                {isLoading ? (
-                  'Processing Transfer...'
-                ) : (
-                  <>
-                    Transfer Tokens
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </>
-                )}
-              </Button>
+              {/* Transfer Form */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Transfer Details</CardTitle>
+                  <CardDescription>
+                    Enter the recipient's address and amount to transfer
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="recipient">Recipient Address</Label>
+                    <Input
+                      id="recipient"
+                      value={recipient}
+                      onChange={(e) => setRecipient(e.target.value)}
+                      placeholder="G..."
+                    />
+                    {recipient && !isValidRecipient && (
+                      <p className="text-sm text-red-500">
+                        Please enter a valid Stellar address
+                      </p>
+                    )}
+                  </div>
 
-              {/* Warnings */}
-              {!isWhitelisted && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    Your address is not whitelisted. You cannot transfer tokens until compliance verification is complete.
-                  </AlertDescription>
-                </Alert>
-              )}
-            </CardContent>
-          </Card>
+                  <div className="space-y-2">
+                    <Label htmlFor="amount">Amount (TRVL Tokens)</Label>
+                    <Input
+                      id="amount"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                      placeholder="0.00"
+                      type="number"
+                    />
+                    {amount && (
+                      <p className="text-sm text-muted-foreground">
+                        ≈ {Math.floor(parseFloat(amount) / 1000) * 7} stay nights
+                      </p>
+                    )}
+                  </div>
 
-          {/* Help Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Transfer Requirements</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                <div>
-                  <p className="font-medium">KYC Verification</p>
-                  <p className="text-sm text-muted-foreground">
-                    Both sender and recipient must have completed KYC verification
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                <div>
-                  <p className="font-medium">Whitelist Status</p>
-                  <p className="text-sm text-muted-foreground">
-                    Addresses must be on the approved whitelist for this asset
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                <div>
-                  <p className="font-medium">Jurisdiction Compliance</p>
-                  <p className="text-sm text-muted-foreground">
-                    Transfers must comply with local regulations and asset restrictions
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                  <Alert className="mt-4">
+                    <Info className="h-4 w-4" />
+                    <AlertDescription>
+                      Stay credits are tied to token ownership. Transferring tokens will also transfer the associated stay benefits.
+                    </AlertDescription>
+                  </Alert>
 
-          {/* Back to Dashboard */}
-          <div className="text-center">
-            <Button variant="outline" asChild>
-              <Link href="/">
-                ← Back to Dashboard
-              </Link>
-            </Button>
-          </div>
+                  <div className="pt-4">
+                    <Button 
+                      className="w-full"
+                      onClick={() => setShowConfirmation(true)}
+                      disabled={
+                        !isValidRecipient || 
+                        !amount || 
+                        parseFloat(amount) <= 0 || 
+                        parseFloat(amount) > parseFloat(formatTokenAmount(userBalance))
+                      }
+                    >
+                      <Send className="h-4 w-4 mr-2" />
+                      Review Transfer
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Help Card */}
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-4">
+                    <Hotel className="h-8 w-8 text-[#40E0D0] mt-1" />
+                    <div>
+                      <h3 className="font-semibold mb-1">About Token Transfers</h3>
+                      <p className="text-sm text-muted-foreground">
+                        TRVL tokens represent ownership rights in our curated properties. 
+                        Each token holder receives stay credits proportional to their holdings, 
+                        which can be used to book stays at any of our properties.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       </main>
     </div>
   );
-} 
+}

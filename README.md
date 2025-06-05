@@ -74,6 +74,33 @@ npm start
 
 ## 🏗️ **Project Architecture**
 
+### **Deployment Configuration**
+
+Create a `.env.local` file in the `rwa-frontend` directory with the following configuration:
+
+```env
+NEXT_PUBLIC_NETWORK=testnet
+NEXT_PUBLIC_CONTRACT_ID=CBAIUUNCI6JANKWOLJSRA2ABJOD34ME4YF7BAJGTSGBXZEE6OGANEME7
+```
+
+#### Environment Variables
+
+| Variable | Description | Value |
+|----------|------------|--------|
+| `NEXT_PUBLIC_NETWORK` | Stellar network to use | `testnet` or `mainnet` |
+| `NEXT_PUBLIC_CONTRACT_ID` | Deployed contract address | Your contract address |
+
+#### Contract Deployment
+
+1. The smart contract is deployed on the Stellar testnet
+2. Contract Address: `CBAIUUNCI6JANKWOLJSRA2ABJOD34ME4YF7BAJGTSGBXZEE6OGANEME7`
+3. Network: `testnet`
+
+To deploy to production:
+1. Deploy the contract to Stellar mainnet
+2. Update `.env.local` with mainnet values
+3. Build and deploy the frontend
+
 ### **Technology Stack**
 
 | Component | Technology | Purpose |

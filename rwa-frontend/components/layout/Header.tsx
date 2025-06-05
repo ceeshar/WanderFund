@@ -6,14 +6,15 @@ import { useWalletStore } from '@/stores/wallet';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Building2, 
+  Hotel, 
   Wallet, 
   Network, 
   Settings, 
   LogOut,
   ExternalLink,
   Copy,
-  ChevronDown 
+  ChevronDown,
+  Globe
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -99,89 +100,63 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4">
-        {/* Logo and Navigation */}
-        <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-3">
-            <Building2 className="h-8 w-8 text-primary" />
-            <div>
-              <h1 className="text-lg font-bold">RWA Investor</h1>
-              <p className="text-xs text-muted-foreground">Real World Assets</p>
-            </div>
+      <div className="container flex h-14 items-center">
+        <div className="flex items-center gap-8 flex-1">
+          <Link href="/" className="flex items-center gap-2 font-semibold">
+            <Globe className="h-5 w-5 text-[#40E0D0]" />
+            <span>TravelToken Hub</span>
           </Link>
 
-          {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-6">
-            {navigation.map((item) => (
+            {navigation.map(({ name, href }) => (
               <Link 
-                key={item.name} 
-                href={item.href} 
-                className="text-sm font-medium transition-colors hover:text-primary"
+                key={name}
+                href={href} 
+                className="text-sm font-medium hover:text-primary transition-colors"
               >
-                {item.name}
+                {name}
               </Link>
             ))}
           </nav>
         </div>
 
-        {/* Wallet Section */}
-        <div className="flex items-center gap-3">
-          {/* Network Selector */}
-          {isConnected && (
+        <div className="flex items-center gap-2">
+          {network && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button variant="outline" size="sm" className="hidden md:flex gap-2">
                   <Network className="h-4 w-4" />
-                  <Badge variant={network === 'testnet' ? 'secondary' : 'default'}>
-                    {network}
-                  </Badge>
-                  <ChevronDown className="h-3 w-3" />
+                  {network.charAt(0).toUpperCase() + network.slice(1)}
+                  <ChevronDown className="h-3 w-3 opacity-50" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem 
-                  onClick={() => handleNetworkSwitch('testnet')}
-                  className={network === 'testnet' ? 'bg-muted' : ''}
-                >
-                  <Network className="h-4 w-4 mr-2" />
-                  Testnet
+                <DropdownMenuItem onClick={() => handleNetworkSwitch('testnet')}>
+                  Switch to Testnet
                 </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => handleNetworkSwitch('mainnet')}
-                  className={network === 'mainnet' ? 'bg-muted' : ''}
-                >
-                  <Network className="h-4 w-4 mr-2" />
-                  Mainnet
+                <DropdownMenuItem onClick={() => handleNetworkSwitch('mainnet')}>
+                  Switch to Mainnet
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
 
-          {/* Wallet Connection */}
-          {isConnected ? (
+          {isConnected && address ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-2 max-w-48">
-                  <Wallet className="h-4 w-4" />
-                  <div className="text-left">
-                    <div className="font-mono text-sm">
-                      {truncateAddress(address || '')}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {parseFloat(balance).toFixed(2)} XLM
-                    </div>
-                  </div>
-                  <ChevronDown className="h-3 w-3" />
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Hotel className="h-4 w-4 text-[#40E0D0]" />
+                  {truncateAddress(address)}
+                  <Badge 
+                    variant="secondary" 
+                    className="ml-2 hidden md:inline-flex"
+                  >
+                    {balance} XLM
+                  </Badge>
+                  <ChevronDown className="h-3 w-3 opacity-50" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <div className="px-2 py-1.5">
-                  <div className="text-sm font-medium">Connected Wallet</div>
-                  <div className="font-mono text-xs text-muted-foreground break-all">
-                    {address}
-                  </div>
-                </div>
-                <DropdownMenuSeparator />
+              <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={copyAddress}>
                   <Copy className="h-4 w-4 mr-2" />
                   Copy Address
@@ -191,7 +166,7 @@ export function Header() {
                   View in Explorer
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleDisconnect} className="text-red-600">
+                <DropdownMenuItem onClick={handleDisconnect}>
                   <LogOut className="h-4 w-4 mr-2" />
                   Disconnect
                 </DropdownMenuItem>
@@ -199,11 +174,12 @@ export function Header() {
             </DropdownMenu>
           ) : (
             <Button 
+              size="sm" 
               onClick={handleConnect} 
               disabled={isLoading}
-              className="gap-2"
+              className="bg-[#40E0D0] hover:bg-[#40E0D0]/90"
             >
-              <Wallet className="h-4 w-4" />
+              <Wallet className="h-4 w-4 mr-2" />
               {isLoading ? 'Connecting...' : 'Connect Wallet'}
             </Button>
           )}

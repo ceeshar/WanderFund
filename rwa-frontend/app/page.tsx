@@ -8,14 +8,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Building2, 
-  Coins, 
+  Hotel, 
+  Palmtree, 
   TrendingUp, 
   Users,
   ArrowRight,
-  CheckCircle,
+  Globe,
   AlertCircle,
-  Clock
+  Clock,
+  Sunrise
 } from 'lucide-react';
 import { formatTokenAmount, formatCurrency, formatPercentage } from '@/lib/stellar';
 import Link from 'next/link';
@@ -53,47 +54,47 @@ export default function Dashboard() {
           <div className="flex flex-col items-center justify-center min-h-[calc(100vh-120px)] space-y-8">
             <div className="text-center space-y-4 max-w-2xl">
               <h1 className="text-4xl font-bold tracking-tight">
-                Real World Asset Investment Platform
+                TravelToken Experiences Hub
               </h1>
               <p className="text-xl text-muted-foreground">
-                Access tokenized real estate, commodities, and other physical assets 
-                through compliant blockchain technology on Stellar.
+                Discover and invest in unique travel experiences - from boutique hotels 
+                to eco-tourism facilities, all powered by blockchain technology on Stellar.
               </p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl">
               <Card className="text-center">
                 <CardHeader>
-                  <Building2 className="h-12 w-12 mx-auto text-primary" />
-                  <CardTitle className="text-lg">Tokenized Assets</CardTitle>
+                  <Hotel className="h-12 w-12 mx-auto text-primary" />
+                  <CardTitle className="text-lg">Premium Properties</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Invest in premium real estate and other assets through blockchain tokens
+                    Invest in boutique hotels and eco-tourism facilities while enjoying exclusive accommodation benefits
                   </p>
                 </CardContent>
               </Card>
               
               <Card className="text-center">
                 <CardHeader>
-                  <CheckCircle className="h-12 w-12 mx-auto text-green-600" />
-                  <CardTitle className="text-lg">Compliant</CardTitle>
+                  <Globe className="h-12 w-12 mx-auto text-[#40E0D0]" />
+                  <CardTitle className="text-lg">Sustainable Tourism</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    KYC verification and regulatory compliance built into every transaction
+                    Support eco-friendly and sustainable tourism projects that benefit local communities
                   </p>
                 </CardContent>
               </Card>
               
               <Card className="text-center">
                 <CardHeader>
-                  <TrendingUp className="h-12 w-12 mx-auto text-blue-600" />
-                  <CardTitle className="text-lg">High Yield</CardTitle>
+                  <Palmtree className="h-12 w-12 mx-auto text-[#D2691E]" />
+                  <CardTitle className="text-lg">Unique Experiences</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Earn passive income through rental yields and asset appreciation
+                    Access exclusive travel experiences and earn returns through tourism revenue
                   </p>
                 </CardContent>
               </Card>
@@ -111,9 +112,9 @@ export default function Dashboard() {
         <div className="space-y-8">
           {/* Welcome Section */}
           <div className="space-y-4">
-            <h1 className="text-3xl font-bold">Welcome to RWA Investor</h1>
+            <h1 className="text-3xl font-bold">Welcome to TravelToken Hub</h1>
             <p className="text-lg text-muted-foreground">
-              Your gateway to tokenized real world assets
+              Your gateway to unique travel experiences and sustainable tourism investments
             </p>
           </div>
 
@@ -122,11 +123,11 @@ export default function Dashboard() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Your Holdings</CardTitle>
-                <Building2 className="h-4 w-4 text-muted-foreground" />
+                <Hotel className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {formatTokenAmount(userBalance)} LAPT
+                  {formatTokenAmount(userBalance)} TRVL
                 </div>
                 <p className="text-xs text-muted-foreground">
                   ≈ {formatCurrency(
@@ -138,45 +139,45 @@ export default function Dashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Compliance Status</CardTitle>
+                <CardTitle className="text-sm font-medium">Travel Status</CardTitle>
                 {isWhitelisted ? (
-                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <Globe className="h-4 w-4 text-[#40E0D0]" />
                 ) : (
                   <AlertCircle className="h-4 w-4 text-yellow-600" />
                 )}
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {isWhitelisted ? 'Verified' : 'Pending'}
+                  {isWhitelisted ? 'Explorer' : 'Novice'}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {compliance?.kyc_verified ? 'KYC Complete' : 'KYC Required'}
+                  {compliance?.kyc_verified ? 'Verified Traveler' : 'Verification Required'}
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Est. Annual Yield</CardTitle>
+                <CardTitle className="text-sm font-medium">Projected Returns</CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">8.5%</div>
+                <div className="text-2xl font-bold">12.5%</div>
                 <p className="text-xs text-muted-foreground">
-                  Rental income + appreciation
+                  Tourism revenue + appreciation
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Next Distribution</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">Next Season</CardTitle>
+                <Sunrise className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">15 days</div>
+                <div className="text-2xl font-bold">25 days</div>
                 <p className="text-xs text-muted-foreground">
-                  Monthly rental payment
+                  Peak season starts
                 </p>
               </CardContent>
             </Card>
@@ -201,7 +202,7 @@ export default function Dashboard() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Current Valuation</p>
+                    <p className="text-sm font-medium text-muted-foreground">Property Value</p>
                     <p className="text-2xl font-bold">
                       {formatCurrency(formatTokenAmount(assetMetadata.valuation, 7))}
                     </p>
@@ -213,8 +214,8 @@ export default function Dashboard() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Token Symbol</p>
-                    <p className="text-2xl font-bold font-mono">{assetMetadata.symbol}</p>
+                    <p className="text-sm font-medium text-muted-foreground">Stay Credits</p>
+                    <p className="text-2xl font-bold">14 nights</p>
                   </div>
                 </div>
                 
@@ -227,7 +228,7 @@ export default function Dashboard() {
                   </Button>
                   <Button variant="outline" asChild>
                     <Link href="/marketplace">
-                      View More Assets
+                      Explore Properties
                     </Link>
                   </Button>
                 </div>
@@ -239,39 +240,39 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Investment Opportunities</CardTitle>
+                <CardTitle>Featured Experiences</CardTitle>
                 <CardDescription>
-                  Discover new tokenized assets to diversify your portfolio
+                  Discover unique travel opportunities in our curated collection
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
-                      <p className="font-medium">Downtown Office Building</p>
-                      <p className="text-sm text-muted-foreground">Commercial Real Estate</p>
+                      <p className="font-medium">Luxury Beach Resort</p>
+                      <p className="text-sm text-muted-foreground">Maldives</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold">9.2% APY</p>
-                      <Badge variant="outline" className="text-xs">Coming Soon</Badge>
+                      <p className="font-bold">15.2% APY</p>
+                      <Badge variant="outline" className="text-xs">High Season</Badge>
                     </div>
                   </div>
                   
                   <div className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
-                      <p className="font-medium">Gold Storage Facility</p>
-                      <p className="text-sm text-muted-foreground">Commodities</p>
+                      <p className="font-medium">Mountain Eco-Lodge</p>
+                      <p className="text-sm text-muted-foreground">Swiss Alps</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold">6.8% APY</p>
-                      <Badge variant="outline" className="text-xs">Q2 2025</Badge>
+                      <p className="font-bold">12.8% APY</p>
+                      <Badge variant="outline" className="text-xs">Coming Soon</Badge>
                     </div>
                   </div>
                 </div>
                 
                 <Button className="w-full" variant="outline" asChild>
                   <Link href="/marketplace">
-                    View All Opportunities
+                    View All Properties
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Link>
                 </Button>
@@ -280,35 +281,35 @@ export default function Dashboard() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
+                <CardTitle>Travel Updates</CardTitle>
                 <CardDescription>
-                  Your latest transactions and updates
+                  Your latest bookings and investment activities
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="h-2 w-2 bg-green-500 rounded-full"></div>
+                    <div className="h-2 w-2 bg-[#40E0D0] rounded-full"></div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium">Welcome to RWA Investor</p>
-                      <p className="text-xs text-muted-foreground">Account created successfully</p>
+                      <p className="text-sm font-medium">Welcome Explorer!</p>
+                      <p className="text-xs text-muted-foreground">Your travel journey begins</p>
                     </div>
                     <p className="text-xs text-muted-foreground">Just now</p>
                   </div>
                   
                   <div className="flex items-center gap-3">
-                    <div className="h-2 w-2 bg-blue-500 rounded-full"></div>
+                    <div className="h-2 w-2 bg-[#D2691E] rounded-full"></div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium">Compliance Verification</p>
-                      <p className="text-xs text-muted-foreground">KYC status updated</p>
+                      <p className="text-sm font-medium">Stay Credits Added</p>
+                      <p className="text-xs text-muted-foreground">14 nights available</p>
                     </div>
                     <p className="text-xs text-muted-foreground">2 min ago</p>
                   </div>
                 </div>
                 
                 <Button className="w-full" variant="outline" asChild>
-                  <Link href="/transfer">
-                    Make Your First Transfer
+                  <Link href="/marketplace">
+                    Book Your First Stay
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Link>
                 </Button>

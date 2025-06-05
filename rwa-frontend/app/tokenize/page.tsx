@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { 
-  Building2, 
+  Hotel, 
   FileText, 
   Shield, 
   Clock,
@@ -19,12 +19,14 @@ import {
   ArrowLeft,
   Upload,
   AlertCircle,
-  DollarSign,
+  Globe,
   Users,
-  Briefcase,
+  Palmtree,
   Coins,
   Calculator,
-  Info
+  Info,
+  Sunrise,
+  DollarSign
 } from 'lucide-react';
 import { formatCurrency } from '@/lib/stellar';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -32,56 +34,56 @@ import { Progress } from '@/components/ui/progress';
 
 const ASSET_TYPES = [
   {
-    id: 'real_estate',
-    name: 'Real Estate',
-    description: 'Residential, commercial, or industrial properties',
-    icon: Building2,
-    minValue: 100000,
-    examples: ['Apartment buildings', 'Office complexes', 'Warehouses', 'Retail spaces']
+    id: 'boutique_hotel',
+    name: 'Boutique Hotel',
+    description: 'Unique and luxury hotel properties',
+    icon: Hotel,
+    minValue: 1000000,
+    examples: ['Luxury resorts', 'Boutique hotels', 'Beach villas', 'Historic properties']
   },
   {
-    id: 'commodities',
-    name: 'Commodities',
-    description: 'Physical goods and precious metals',
-    icon: Coins,
-    minValue: 50000,
-    examples: ['Gold storage', 'Oil reserves', 'Agricultural products', 'Rare metals']
+    id: 'eco_resort',
+    name: 'Eco Resort',
+    description: 'Sustainable and eco-friendly tourism facilities',
+    icon: PalmTree,
+    minValue: 800000,
+    examples: ['Eco lodges', 'Treehouse resorts', 'Wilderness retreats', 'Mountain chalets']
   },
   {
-    id: 'infrastructure',
-    name: 'Infrastructure',
-    description: 'Energy, transportation, and utility projects',
-    icon: Briefcase,
+    id: 'experience_venue',
+    name: 'Experience Venue',
+    description: 'Unique venues for cultural and tourism experiences',
+    icon: Globe,
     minValue: 500000,
-    examples: ['Solar farms', 'Wind turbines', 'Data centers', 'Transportation hubs']
+    examples: ['Wineries', 'Cultural centers', 'Adventure bases', 'Wellness retreats']
   }
 ];
 
 const TOKENIZATION_STEPS = [
   {
     id: 1,
-    title: 'Asset Details',
-    description: 'Provide basic information about your asset'
+    title: 'Property Details',
+    description: 'Provide information about your tourism property'
   },
   {
     id: 2,
-    title: 'Legal Documentation',
-    description: 'Upload required legal and ownership documents'
+    title: 'Experience Design',
+    description: 'Define the unique experiences and amenities'
   },
   {
     id: 3,
-    title: 'Tokenization Structure',
-    description: 'Define token economics and distribution'
+    title: 'Legal Documentation',
+    description: 'Upload required permits and certifications'
   },
   {
     id: 4,
-    title: 'Compliance Setup',
-    description: 'Configure investor requirements and restrictions'
+    title: 'Token Structure',
+    description: 'Configure token economics and stay benefits'
   },
   {
     id: 5,
-    title: 'Review & Deploy',
-    description: 'Review all details and deploy your token'
+    title: 'Review & Launch',
+    description: 'Review all details and launch your property'
   }
 ];
 
@@ -89,33 +91,38 @@ export default function TokenizePage() {
   const { isConnected, address } = useWalletStore();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    // Step 1: Asset Details
+    // Step 1: Property Details
     assetType: '',
-    assetName: '',
+    propertyName: '',
     location: '',
     description: '',
     totalValue: '',
+    rooms: '',
+    maxOccupancy: '',
     
-    // Step 2: Legal Documentation
+    // Step 2: Experience Design
+    amenities: [] as string[],
+    experiences: [] as string[],
+    seasonality: '',
+    sustainabilityFeatures: [] as string[],
+    
+    // Step 3: Legal Documentation
     ownershipProof: null as File | null,
-    valuation: null as File | null,
-    insurance: null as File | null,
+    permits: null as File | null,
+    insuranceDoc: null as File | null,
+    certifications: [] as File[],
     
-    // Step 3: Tokenization Structure
-    tokenSymbol: '',
-    totalSupply: '',
+    // Step 4: Token Structure
+    totalTokens: '',
     pricePerToken: '',
-    minInvestment: '',
+    stayCredits: '',
+    revenueShare: '',
+    minHolding: '',
     
-    // Step 4: Compliance
-    kycRequired: true,
-    accreditedOnly: false,
-    jurisdictionRestrictions: '',
-    
-    // Step 5: Launch settings
+    // Step 5: Launch Settings
     launchDate: '',
-    fundingGoal: '',
-    fundingDeadline: ''
+    initialDistribution: '',
+    vestingPeriod: '',
   });
 
   const updateFormData = (field: string, value: any) => {
@@ -135,95 +142,130 @@ export default function TokenizePage() {
   };
 
   const calculateTokenomics = () => {
-    if (!formData.totalValue || !formData.totalSupply) return null;
+    if (!formData.totalValue || !formData.totalTokens) return null;
     
     const totalVal = parseFloat(formData.totalValue);
-    const supply = parseFloat(formData.totalSupply);
+    const supply = parseFloat(formData.totalTokens);
     const pricePerToken = totalVal / supply;
     
     return {
       pricePerToken: pricePerToken.toFixed(2),
       marketCap: totalVal,
-      minInvestmentTokens: formData.minInvestment ? Math.ceil(parseFloat(formData.minInvestment) / pricePerToken) : 0
+      minInvestmentTokens: formData.minHolding ? Math.ceil(parseFloat(formData.minHolding) / pricePerToken) : 0
     };
   };
 
-  const renderStepContent = () => {
+  const renderStep = () => {
     switch (currentStep) {
       case 1:
         return (
           <div className="space-y-6">
-            <div>
-              <Label className="text-base font-semibold mb-4 block">Asset Type</Label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {ASSET_TYPES.map((type) => {
-                  const Icon = type.icon;
-                  return (
-                    <Card 
-                      key={type.id}
-                      className={`cursor-pointer transition-all ${
-                        formData.assetType === type.id 
-                          ? 'ring-2 ring-primary bg-primary/5' 
-                          : 'hover:shadow-md'
-                      }`}
-                      onClick={() => updateFormData('assetType', type.id)}
-                    >
-                      <CardContent className="p-6 text-center">
-                        <Icon className="h-8 w-8 mx-auto mb-3 text-primary" />
-                        <h3 className="font-semibold mb-2">{type.name}</h3>
-                        <p className="text-sm text-muted-foreground mb-3">{type.description}</p>
-                        <Badge variant="outline">Min: {formatCurrency(type.minValue.toString())}</Badge>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {ASSET_TYPES.map((type) => {
+                const Icon = type.icon;
+                return (
+                  <Card 
+                    key={type.id}
+                    className={`cursor-pointer transition-all ${
+                      formData.assetType === type.id ? 'border-primary' : ''
+                    }`}
+                    onClick={() => setFormData({...formData, assetType: type.id})}
+                  >
+                    <CardHeader>
+                      <Icon className="h-8 w-8 mb-2 text-primary" />
+                      <CardTitle className="text-lg">{type.name}</CardTitle>
+                      <CardDescription>{type.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2 text-sm">
+                        <p className="text-muted-foreground">Examples:</p>
+                        <ul className="list-disc list-inside space-y-1">
+                          {type.examples.map((example) => (
+                            <li key={example}>{example}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="assetName">Asset Name</Label>
-                <Input
-                  id="assetName"
-                  placeholder="e.g., Luxury Apartment NYC"
-                  value={formData.assetName}
-                  onChange={(e) => updateFormData('assetName', e.target.value)}
-                />
-              </div>
-              <div>
-                <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  placeholder="e.g., Manhattan, New York"
-                  value={formData.location}
-                  onChange={(e) => updateFormData('location', e.target.value)}
-                />
-              </div>
-            </div>
+            <div className="space-y-4">
+              <div className="grid gap-4">
+                <div>
+                  <Label htmlFor="propertyName">Property Name</Label>
+                  <Input
+                    id="propertyName"
+                    placeholder="Enter the name of your property"
+                    value={formData.propertyName}
+                    onChange={(e) => setFormData({...formData, propertyName: e.target.value})}
+                  />
+                </div>
 
-            <div>
-              <Label htmlFor="description">Asset Description</Label>
-              <Textarea
-                id="description"
-                placeholder="Detailed description of your asset, its features, and investment potential..."
-                value={formData.description}
-                onChange={(e) => updateFormData('description', e.target.value)}
-                className="min-h-24"
-              />
-            </div>
+                <div>
+                  <Label htmlFor="location">Location</Label>
+                  <Input
+                    id="location"
+                    placeholder="City, Country"
+                    value={formData.location}
+                    onChange={(e) => setFormData({...formData, location: e.target.value})}
+                  />
+                </div>
 
-            <div>
-              <Label htmlFor="totalValue">Total Asset Value (USD)</Label>
-              <Input
-                id="totalValue"
-                type="number"
-                placeholder="2500000"
-                value={formData.totalValue}
-                onChange={(e) => updateFormData('totalValue', e.target.value)}
-              />
-              <p className="text-sm text-muted-foreground mt-1">
-                Based on professional appraisal or market valuation
-              </p>
+                <div>
+                  <Label htmlFor="description">Property Description</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Describe your property and its unique features"
+                    value={formData.description}
+                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="rooms">Number of Rooms/Units</Label>
+                    <Input
+                      id="rooms"
+                      type="number"
+                      placeholder="e.g., 20"
+                      value={formData.rooms}
+                      onChange={(e) => setFormData({...formData, rooms: e.target.value})}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="maxOccupancy">Maximum Occupancy</Label>
+                    <Input
+                      id="maxOccupancy"
+                      type="number"
+                      placeholder="e.g., 50"
+                      value={formData.maxOccupancy}
+                      onChange={(e) => setFormData({...formData, maxOccupancy: e.target.value})}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="totalValue">Property Valuation (USD)</Label>
+                  <div className="relative">
+                    <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="totalValue"
+                      className="pl-9"
+                      placeholder="0.00"
+                      value={formData.totalValue}
+                      onChange={(e) => setFormData({...formData, totalValue: e.target.value})}
+                    />
+                  </div>
+                  {formData.assetType && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Minimum value: {formatCurrency(ASSET_TYPES.find(t => t.id === formData.assetType)?.minValue.toString() || '0')}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         );
@@ -231,189 +273,241 @@ export default function TokenizePage() {
       case 2:
         return (
           <div className="space-y-6">
-            <Alert>
-              <Info className="h-4 w-4" />
-              <AlertDescription>
-                All documents must be notarized and verified by our legal team before tokenization approval.
-              </AlertDescription>
-            </Alert>
+            <div className="grid gap-4">
+              <div>
+                <Label>Property Amenities</Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+                  {[
+                    'Swimming Pool', 'Spa', 'Restaurant', 'Room Service',
+                    'Beach Access', 'Fitness Center', 'Business Center', 'Airport Transfer',
+                    'Free WiFi', 'Parking', 'Pet Friendly', 'Conference Facilities'
+                  ].map((amenity) => (
+                    <div key={amenity} className="flex items-center space-x-2">
+                      <input 
+                        type="checkbox" 
+                        id={amenity}
+                        checked={formData.amenities.includes(amenity)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setFormData({
+                              ...formData,
+                              amenities: [...formData.amenities, amenity]
+                            });
+                          } else {
+                            setFormData({
+                              ...formData,
+                              amenities: formData.amenities.filter(a => a !== amenity)
+                            });
+                          }
+                        }}
+                      />
+                      <label htmlFor={amenity}>{amenity}</label>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <FileText className="h-5 w-5" />
-                    Ownership Proof
-                  </CardTitle>
-                  <CardDescription>
-                    Property deed, title, or ownership certificate
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center">
-                    <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground mb-2">Upload PDF or image</p>
-                    <Button variant="outline" size="sm">
-                      Choose File
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <div>
+                <Label>Unique Experiences</Label>
+                <div className="grid gap-2 mt-2">
+                  <Textarea
+                    placeholder="List the unique experiences you offer (one per line)"
+                    value={formData.experiences.join('\n')}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      experiences: e.target.value.split('\n').filter(Boolean)
+                    })}
+                    rows={4}
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Examples: Wine tasting, Cooking classes, Guided tours, Yoga sessions
+                  </p>
+                </div>
+              </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calculator className="h-5 w-5" />
-                    Professional Valuation
-                  </CardTitle>
-                  <CardDescription>
-                    Official appraisal from certified assessor
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center">
-                    <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground mb-2">Upload appraisal report</p>
-                    <Button variant="outline" size="sm">
-                      Choose File
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <div>
+                <Label>Seasonality</Label>
+                <select
+                  className="w-full p-2 border rounded-md mt-1"
+                  value={formData.seasonality}
+                  onChange={(e) => setFormData({...formData, seasonality: e.target.value})}
+                >
+                  <option value="">Select season type</option>
+                  <option value="year_round">Year-round destination</option>
+                  <option value="summer">Summer season (May-Sep)</option>
+                  <option value="winter">Winter season (Nov-Mar)</option>
+                  <option value="shoulder">Shoulder seasons</option>
+                </select>
+              </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Shield className="h-5 w-5" />
-                    Insurance Documentation
-                  </CardTitle>
-                  <CardDescription>
-                    Current insurance policy and coverage details
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center">
-                    <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground mb-2">Upload insurance policy</p>
-                    <Button variant="outline" size="sm">
-                      Choose File
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Briefcase className="h-5 w-5" />
-                    Additional Documents
-                  </CardTitle>
-                  <CardDescription>
-                    Any other relevant legal or financial documents
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center">
-                    <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground mb-2">Optional documents</p>
-                    <Button variant="outline" size="sm">
-                      Choose Files
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <div>
+                <Label>Sustainability Features</Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+                  {[
+                    'Solar Power', 'Water Conservation', 'Waste Management',
+                    'Local Sourcing', 'EV Charging', 'Green Building',
+                    'Community Programs', 'Wildlife Protection'
+                  ].map((feature) => (
+                    <div key={feature} className="flex items-center space-x-2">
+                      <input 
+                        type="checkbox"
+                        id={feature}
+                        checked={formData.sustainabilityFeatures.includes(feature)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setFormData({
+                              ...formData,
+                              sustainabilityFeatures: [...formData.sustainabilityFeatures, feature]
+                            });
+                          } else {
+                            setFormData({
+                              ...formData,
+                              sustainabilityFeatures: formData.sustainabilityFeatures.filter(f => f !== feature)
+                            });
+                          }
+                        }}
+                      />
+                      <label htmlFor={feature}>{feature}</label>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         );
 
       case 3:
-        const tokenomics = calculateTokenomics();
         return (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="tokenSymbol">Token Symbol</Label>
-                <Input
-                  id="tokenSymbol"
-                  placeholder="e.g., LAPT"
-                  value={formData.tokenSymbol}
-                  onChange={(e) => updateFormData('tokenSymbol', e.target.value.toUpperCase())}
-                  maxLength={5}
-                />
-                <p className="text-sm text-muted-foreground mt-1">
-                  3-5 character unique identifier
-                </p>
-              </div>
-              <div>
-                <Label htmlFor="totalSupply">Total Token Supply</Label>
-                <Input
-                  id="totalSupply"
-                  type="number"
-                  placeholder="1000000"
-                  value={formData.totalSupply}
-                  onChange={(e) => updateFormData('totalSupply', e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="minInvestment">Minimum Investment (USD)</Label>
-              <Input
-                id="minInvestment"
-                type="number"
-                placeholder="250"
-                value={formData.minInvestment}
-                onChange={(e) => updateFormData('minInvestment', e.target.value)}
-              />
-            </div>
-
-            {tokenomics && (
-              <Card className="bg-muted/50">
+            <div className="grid gap-6">
+              <Card>
                 <CardHeader>
-                  <CardTitle>Calculated Tokenomics</CardTitle>
+                  <CardTitle>Required Documentation</CardTitle>
+                  <CardDescription>
+                    Upload all necessary documents to verify your property
+                  </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4">
                     <div>
-                      <p className="text-sm text-muted-foreground">Price Per Token</p>
-                      <p className="text-2xl font-bold">${tokenomics.pricePerToken}</p>
+                      <Label>Property Ownership Proof</Label>
+                      <div className="mt-2">
+                        <Button variant="outline" className="w-full" onClick={() => document.getElementById('ownershipDoc')?.click()}>
+                          <Upload className="h-4 w-4 mr-2" />
+                          Upload Ownership Document
+                        </Button>
+                        <input
+                          id="ownershipDoc"
+                          type="file"
+                          className="hidden"
+                          accept=".pdf,.doc,.docx"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) {
+                              setFormData({...formData, ownershipProof: e.target.files[0]});
+                            }
+                          }}
+                        />
+                        {formData.ownershipProof && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Uploaded: {formData.ownershipProof.name}
+                          </p>
+                        )}
+                      </div>
                     </div>
+
                     <div>
-                      <p className="text-sm text-muted-foreground">Market Cap</p>
-                      <p className="text-2xl font-bold">{formatCurrency(tokenomics.marketCap.toString())}</p>
+                      <Label>Tourism Permits & Licenses</Label>
+                      <div className="mt-2">
+                        <Button variant="outline" className="w-full" onClick={() => document.getElementById('permitsDocs')?.click()}>
+                          <Upload className="h-4 w-4 mr-2" />
+                          Upload Permits
+                        </Button>
+                        <input
+                          id="permitsDocs"
+                          type="file"
+                          className="hidden"
+                          accept=".pdf,.doc,.docx"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) {
+                              setFormData({...formData, permits: e.target.files[0]});
+                            }
+                          }}
+                        />
+                        {formData.permits && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Uploaded: {formData.permits.name}
+                          </p>
+                        )}
+                      </div>
                     </div>
+
                     <div>
-                      <p className="text-sm text-muted-foreground">Min Investment Tokens</p>
-                      <p className="text-2xl font-bold">{tokenomics.minInvestmentTokens.toLocaleString()}</p>
+                      <Label>Insurance Documentation</Label>
+                      <div className="mt-2">
+                        <Button variant="outline" className="w-full" onClick={() => document.getElementById('insuranceDoc')?.click()}>
+                          <Upload className="h-4 w-4 mr-2" />
+                          Upload Insurance Documents
+                        </Button>
+                        <input
+                          id="insuranceDoc"
+                          type="file"
+                          className="hidden"
+                          accept=".pdf,.doc,.docx"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) {
+                              setFormData({...formData, insuranceDoc: e.target.files[0]});
+                            }
+                          }}
+                        />
+                        {formData.insuranceDoc && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Uploaded: {formData.insuranceDoc.name}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
-            )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="fundingGoal">Funding Goal (USD)</Label>
-                <Input
-                  id="fundingGoal"
-                  type="number"
-                  placeholder="1000000"
-                  value={formData.fundingGoal}
-                  onChange={(e) => updateFormData('fundingGoal', e.target.value)}
-                />
-                <p className="text-sm text-muted-foreground mt-1">
-                  Target amount to raise from investors
-                </p>
-              </div>
-              <div>
-                <Label htmlFor="fundingDeadline">Funding Deadline</Label>
-                <Input
-                  id="fundingDeadline"
-                  type="date"
-                  value={formData.fundingDeadline}
-                  onChange={(e) => updateFormData('fundingDeadline', e.target.value)}
-                />
-              </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Additional Certifications</CardTitle>
+                  <CardDescription>
+                    Upload any sustainability or quality certifications
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button variant="outline" className="w-full" onClick={() => document.getElementById('certDocs')?.click()}>
+                    <Upload className="h-4 w-4 mr-2" />
+                    Upload Certifications
+                  </Button>
+                  <input
+                    id="certDocs"
+                    type="file"
+                    className="hidden"
+                    accept=".pdf,.doc,.docx"
+                    multiple
+                    onChange={(e) => {
+                      if (e.target.files) {
+                        setFormData({
+                          ...formData,
+                          certifications: Array.from(e.target.files)
+                        });
+                      }
+                    }}
+                  />
+                  {formData.certifications.length > 0 && (
+                    <div className="mt-2 space-y-1">
+                      {formData.certifications.map((file, index) => (
+                        <p key={index} className="text-sm text-muted-foreground">
+                          Uploaded: {file.name}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
           </div>
         );
@@ -423,129 +517,157 @@ export default function TokenizePage() {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Investor Requirements</CardTitle>
+                <CardTitle>Token Economics</CardTitle>
                 <CardDescription>
-                  Set compliance requirements for token holders
+                  Configure how your property tokens will be structured
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label>KYC Verification Required</Label>
-                    <p className="text-sm text-muted-foreground">All investors must complete identity verification</p>
+                    <Label htmlFor="totalTokens">Total Number of Tokens</Label>
+                    <Input
+                      id="totalTokens"
+                      type="number"
+                      placeholder="e.g., 1,000,000"
+                      value={formData.totalTokens}
+                      onChange={(e) => setFormData({...formData, totalTokens: e.target.value})}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Recommended: 100,000 - 10,000,000 tokens
+                    </p>
                   </div>
-                  <Button
-                    variant={formData.kycRequired ? "default" : "outline"}
-                    onClick={() => updateFormData('kycRequired', !formData.kycRequired)}
-                  >
-                    {formData.kycRequired ? 'Required' : 'Optional'}
-                  </Button>
+
+                  <div>
+                    <Label htmlFor="pricePerToken">Price per Token (USD)</Label>
+                    <div className="relative">
+                      <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="pricePerToken"
+                        className="pl-9"
+                        placeholder="0.00"
+                        value={formData.pricePerToken}
+                        onChange={(e) => setFormData({...formData, pricePerToken: e.target.value})}
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-between">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label>Accredited Investors Only</Label>
-                    <p className="text-sm text-muted-foreground">Restrict to accredited investors (higher income/net worth)</p>
+                    <Label htmlFor="stayCredits">Stay Credits (nights/year per 1000 tokens)</Label>
+                    <Input
+                      id="stayCredits"
+                      type="number"
+                      placeholder="e.g., 7"
+                      value={formData.stayCredits}
+                      onChange={(e) => setFormData({...formData, stayCredits: e.target.value})}
+                    />
                   </div>
-                  <Button
-                    variant={formData.accreditedOnly ? "default" : "outline"}
-                    onClick={() => updateFormData('accreditedOnly', !formData.accreditedOnly)}
-                  >
-                    {formData.accreditedOnly ? 'Required' : 'Open to All'}
-                  </Button>
+
+                  <div>
+                    <Label htmlFor="revenueShare">Revenue Share Percentage</Label>
+                    <Input
+                      id="revenueShare"
+                      type="number"
+                      placeholder="e.g., 70"
+                      value={formData.revenueShare}
+                      onChange={(e) => setFormData({...formData, revenueShare: e.target.value})}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Percentage of revenue distributed to token holders
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="minHolding">Minimum Token Holding</Label>
+                  <Input
+                    id="minHolding"
+                    type="number"
+                    placeholder="e.g., 1000"
+                    value={formData.minHolding}
+                    onChange={(e) => setFormData({...formData, minHolding: e.target.value})}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Minimum tokens required to access stay benefits
+                  </p>
                 </div>
               </CardContent>
             </Card>
-
-            <div>
-              <Label htmlFor="jurisdictionRestrictions">Jurisdiction Restrictions</Label>
-              <Textarea
-                id="jurisdictionRestrictions"
-                placeholder="e.g., US residents only, excluding OFAC sanctioned countries..."
-                value={formData.jurisdictionRestrictions}
-                onChange={(e) => updateFormData('jurisdictionRestrictions', e.target.value)}
-              />
-              <p className="text-sm text-muted-foreground mt-1">
-                Specify any geographic restrictions for token holders
-              </p>
-            </div>
-
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                Our legal team will review these settings to ensure regulatory compliance in relevant jurisdictions.
-              </AlertDescription>
-            </Alert>
           </div>
         );
 
       case 5:
         return (
           <div className="space-y-6">
-            <Alert>
-              <Check className="h-4 w-4" />
-              <AlertDescription>
-                Review all information carefully. Once deployed, some settings cannot be changed.
-              </AlertDescription>
-            </Alert>
+            <Card>
+              <CardHeader>
+                <CardTitle>Launch Configuration</CardTitle>
+                <CardDescription>
+                  Set the parameters for your property token launch
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="launchDate">Launch Date</Label>
+                    <Input
+                      id="launchDate"
+                      type="date"
+                      value={formData.launchDate}
+                      onChange={(e) => setFormData({...formData, launchDate: e.target.value})}
+                    />
+                  </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Asset Information</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Name:</span>
-                    <span className="font-medium">{formData.assetName}</span>
+                  <div>
+                    <Label htmlFor="initialDistribution">Initial Distribution (%)</Label>
+                    <Input
+                      id="initialDistribution"
+                      type="number"
+                      placeholder="e.g., 60"
+                      value={formData.initialDistribution}
+                      onChange={(e) => setFormData({...formData, initialDistribution: e.target.value})}
+                    />
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Type:</span>
-                    <span className="font-medium">{ASSET_TYPES.find(t => t.id === formData.assetType)?.name}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Location:</span>
-                    <span className="font-medium">{formData.location}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Total Value:</span>
-                    <span className="font-medium">{formatCurrency(formData.totalValue)}</span>
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Token Details</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Symbol:</span>
-                    <span className="font-medium">{formData.tokenSymbol}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Total Supply:</span>
-                    <span className="font-medium">{parseFloat(formData.totalSupply).toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Price per Token:</span>
-                    <span className="font-medium">${calculateTokenomics()?.pricePerToken}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Min Investment:</span>
-                    <span className="font-medium">{formatCurrency(formData.minInvestment)}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                <div>
+                  <Label htmlFor="vestingPeriod">Vesting Period (months)</Label>
+                  <Input
+                    id="vestingPeriod"
+                    type="number"
+                    placeholder="e.g., 12"
+                    value={formData.vestingPeriod}
+                    onChange={(e) => setFormData({...formData, vestingPeriod: e.target.value})}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Period over which tokens are gradually released to investors
+                  </p>
+                </div>
 
-            <Card className="bg-primary text-primary-foreground">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-2">Deployment Cost</h3>
-                <div className="text-3xl font-bold mb-2">$2,500 USD</div>
-                <p className="text-sm opacity-90">
-                  Includes smart contract deployment, legal review, compliance setup, and ongoing platform fees for the first year.
-                </p>
+                <Alert>
+                  <Info className="h-4 w-4" />
+                  <AlertDescription>
+                    Please review all details carefully. Once deployed, the token configuration cannot be changed.
+                  </AlertDescription>
+                </Alert>
+
+                <div className="border rounded-lg p-4 space-y-4">
+                  <h4 className="font-semibold">Summary</h4>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <p className="text-muted-foreground">Property Value:</p>
+                    <p>{formatCurrency(formData.totalValue)}</p>
+                    <p className="text-muted-foreground">Total Tokens:</p>
+                    <p>{parseInt(formData.totalTokens).toLocaleString()}</p>
+                    <p className="text-muted-foreground">Price per Token:</p>
+                    <p>{formatCurrency(formData.pricePerToken)}</p>
+                    <p className="text-muted-foreground">Stay Credits:</p>
+                    <p>{formData.stayCredits} nights/1000 tokens</p>
+                    <p className="text-muted-foreground">Revenue Share:</p>
+                    <p>{formData.revenueShare}%</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -561,16 +683,12 @@ export default function TokenizePage() {
       <div className="min-h-screen bg-background">
         <Header />
         <main className="container mx-auto px-4 py-8">
-          <Card className="max-w-md mx-auto text-center">
-            <CardContent className="p-8">
-              <Shield className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-              <h2 className="text-xl font-semibold mb-2">Wallet Required</h2>
-              <p className="text-muted-foreground mb-4">
-                Connect your wallet to start the tokenization process
-              </p>
-              <Button className="w-full">Connect Wallet</Button>
-            </CardContent>
-          </Card>
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              Please connect your wallet to start tokenizing your property.
+            </AlertDescription>
+          </Alert>
         </main>
       </div>
     );
@@ -581,74 +699,62 @@ export default function TokenizePage() {
       <Header />
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto space-y-8">
-          {/* Header */}
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl font-bold">Asset Tokenization</h1>
-            <p className="text-xl text-muted-foreground">
-              Transform your real world asset into tradeable tokens
-            </p>
+          {/* Progress */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <p>Step {currentStep} of {TOKENIZATION_STEPS.length}</p>
+              <p className="text-muted-foreground">
+                {TOKENIZATION_STEPS[currentStep - 1].title}
+              </p>
+            </div>
+            <Progress value={(currentStep / TOKENIZATION_STEPS.length) * 100} />
           </div>
 
-          {/* Progress Steps */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                {TOKENIZATION_STEPS.map((step, index) => (
-                  <div key={step.id} className="flex items-center">
-                    <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold ${
-                      currentStep >= step.id 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'bg-muted text-muted-foreground'
-                    }`}>
-                      {currentStep > step.id ? <Check className="h-4 w-4" /> : step.id}
-                    </div>
-                    {index < TOKENIZATION_STEPS.length - 1 && (
-                      <div className={`w-16 h-0.5 mx-2 ${
-                        currentStep > step.id ? 'bg-primary' : 'bg-muted'
-                      }`} />
-                    )}
-                  </div>
-                ))}
-              </div>
-              <Progress value={(currentStep / TOKENIZATION_STEPS.length) * 100} className="mb-2" />
-              <div className="text-center">
-                <h3 className="font-semibold">{TOKENIZATION_STEPS[currentStep - 1].title}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {TOKENIZATION_STEPS[currentStep - 1].description}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Step Content */}
-          <Card>
-            <CardContent className="p-8">
-              {renderStepContent()}
-            </CardContent>
-          </Card>
+          <div>
+            <h2 className="text-2xl font-bold mb-2">
+              {TOKENIZATION_STEPS[currentStep - 1].title}
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              {TOKENIZATION_STEPS[currentStep - 1].description}
+            </p>
+
+            {renderStep()}
+          </div>
 
           {/* Navigation */}
-          <div className="flex justify-between">
-            <Button 
-              variant="outline" 
-              onClick={prevStep}
+          <div className="flex justify-between pt-6">
+            <Button
+              variant="outline"
+              onClick={() => setCurrentStep(currentStep - 1)}
               disabled={currentStep === 1}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Previous
             </Button>
-            
-            {currentStep < TOKENIZATION_STEPS.length ? (
-              <Button onClick={nextStep}>
-                Next
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            ) : (
-              <Button className="bg-green-600 hover:bg-green-700">
-                Deploy Token
-                <Coins className="h-4 w-4 ml-2" />
-              </Button>
-            )}
+
+            <Button
+              onClick={() => {
+                if (currentStep === TOKENIZATION_STEPS.length) {
+                  // Handle form submission
+                  console.log('Form submitted:', formData);
+                } else {
+                  setCurrentStep(currentStep + 1);
+                }
+              }}
+            >
+              {currentStep === TOKENIZATION_STEPS.length ? (
+                <>
+                  Launch Property
+                  <Sunrise className="h-4 w-4 ml-2" />
+                </>
+              ) : (
+                <>
+                  Next
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </>
+              )}
+            </Button>
           </div>
         </div>
       </main>
